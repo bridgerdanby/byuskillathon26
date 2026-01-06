@@ -1,0 +1,11 @@
+<section class="search-section">
+  <input
+    type="text"
+    class="search-input"
+    [(ngModel)]="searchQuery"
+    placeholder="Search products..."
+    (keypress)="onKeyPress($event)"
+  />
+  <!-- BUG #2: Button has wrong color due to CSS specificity -->
+  <button class="btn search-btn" (click)="onSearch()">Search</button>
+</section>

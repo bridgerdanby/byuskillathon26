@@ -1,0 +1,30 @@
+<app-header></app-header>
+
+<main class="main-content">
+  <app-search (search)="onSearch($event)"></app-search>
+
+  <app-filter (filterChange)="onFilterChange($event)"></app-filter>
+
+  <app-products-grid
+    [products]="products"
+    [loading]="loading"
+    [error]="error"
+    (addToCart)="onAddToCart($event)"
+  ></app-products-grid>
+
+  <app-debug-panel></app-debug-panel>
+</main>
+
+<app-cart-sidebar (checkout)="openCheckout()"></app-cart-sidebar>
+
+<app-checkout-modal
+  [isVisible]="showCheckoutModal"
+  (close)="closeCheckout()"
+  (orderPlaced)="onOrderPlaced()"
+></app-checkout-modal>
+
+<app-success-toast></app-success-toast>
+
+<footer class="footer">
+  <p>BuggyMart Demo - Chrome DevTools Skillathon 2026</p>
+</footer>

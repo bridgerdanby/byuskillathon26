@@ -1,0 +1,20 @@
+<section class="debug-section">
+  <h3>Debug Panel</h3>
+  <p class="debug-hint">Use these buttons to explore Chrome DevTools features</p>
+
+  <div class="debug-buttons">
+    <button class="btn" (click)="triggerConsoleError()">
+      Trigger Console Error
+    </button>
+    <button class="btn" (click)="fetchExternalData()">
+      Fetch External Data
+    </button>
+    <button class="btn" (click)="slowOperation()">
+      Slow Operation (Buggy)
+    </button>
+  </div>
+
+  <div class="debug-output">
+    <pre>{{ debugOutput || 'Click a button to see output...' }}</pre>
+  </div>
+</section>

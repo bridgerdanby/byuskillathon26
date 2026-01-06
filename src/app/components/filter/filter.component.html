@@ -1,0 +1,13 @@
+<section class="filter-section">
+  <h3>Filter by Category</h3>
+  <div class="filter-buttons">
+    <button
+      *ngFor="let category of categories"
+      class="filter-btn"
+      [class.active]="category === activeCategory"
+      (click)="selectCategory(category)"
+    >
+      {{ getCategoryLabel(category) }}
+    </button>
+  </div>
+</section>

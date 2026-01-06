@@ -1,0 +1,41 @@
+/* BUG #5 (Inspector): Toast is hidden even when visible class is added */
+.success-toast {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: white;
+  padding: 15px 25px;
+  border-radius: 8px;
+  display: none;
+  align-items: center;
+  gap: 10px;
+  z-index: 2000;
+  opacity: 0; /* BUG: Opacity is 0 even when visible */
+  transition: opacity 0.3s;
+}
+
+.success-toast.visible {
+  display: flex;
+  /* BUG: Missing opacity: 1 to make it visible */
+}
+
+.success-toast.success {
+  background: #27ae60;
+}
+
+.success-toast.error {
+  background: #ff4757;
+}
+
+.success-toast.info {
+  background: #3498db;
+}
+
+.toast-icon {
+  font-size: 1.2rem;
+}
+
+.toast-message {
+  font-weight: 500;
+}

@@ -1,0 +1,26 @@
+<section class="products-section">
+  <h2>Products</h2>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading">
+    Loading products...
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error" class="error-message">
+    {{ error }}
+  </div>
+
+  <!-- Products Grid - BUG #3: flex-wrap: nowrap causes horizontal scroll -->
+  <div class="products-grid" *ngIf="!loading && !error">
+    <app-product-card
+      *ngFor="let product of products; trackBy: trackByProductId"
+      [product]="product"
+      (addToCart)="onAddToCart($event)"
+    ></app-product-card>
+
+    <p *ngIf="products.length === 0" class="no-products">
+      No products found. Try a different search or filter.
+    </p>
+  </div>
+</section>

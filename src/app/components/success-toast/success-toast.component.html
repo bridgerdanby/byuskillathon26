@@ -1,0 +1,17 @@
+<!-- BUG #5: Toast has opacity: 0 even when visible -->
+<div
+  class="success-toast"
+  [class.visible]="toast.visible"
+  [class.success]="toast.type === 'success'"
+  [class.error]="toast.type === 'error'"
+  [class.info]="toast.type === 'info'"
+>
+  <span class="toast-icon">
+    <ng-container [ngSwitch]="toast.type">
+      <span *ngSwitchCase="'success'">✓</span>
+      <span *ngSwitchCase="'error'">✕</span>
+      <span *ngSwitchCase="'info'">ℹ</span>
+    </ng-container>
+  </span>
+  <span class="toast-message">{{ toast.message }}</span>
+</div>

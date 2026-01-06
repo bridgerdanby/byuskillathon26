@@ -1,0 +1,7 @@
+<div class="product-card">
+  <div class="product-image">{{ product.emoji }}</div>
+  <h3 class="product-name">{{ product.name }}</h3>
+  <p class="product-category">{{ product.category }}</p>
+  <p class="product-price">{{ formatPrice(product.price) }}</p>
+  <button class="btn add-btn" (click)="onAddToCart()">Add to Cart</button>
+</div>

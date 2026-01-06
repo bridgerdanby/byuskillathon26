@@ -1,0 +1,82 @@
+<!-- BUG #4: Modal z-index is lower than cart sidebar, appears behind it -->
+<div
+  class="modal"
+  [class.visible]="isVisible"
+  (click)="onBackdropClick($event)"
+>
+  <div class="modal-content">
+    <h2>Checkout</h2>
+
+    <form (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="name">Full Name</label>
+        <input
+          type="text"
+          id="name"
+          [(ngModel)]="formData.name"
+          name="name"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input
+          type="email"
+          id="email"
+          [(ngModel)]="formData.email"
+          name="email"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="card">Card Number</label>
+        <input
+          type="text"
+          id="card"
+          [(ngModel)]="formData.cardNumber"
+          name="cardNumber"
+          placeholder="1234-5678-9012-3456"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="coupon">Coupon Code (optional)</label>
+        <div class="coupon-row">
+          <input
+            type="text"
+            id="coupon"
+            [(ngModel)]="formData.couponCode"
+            name="couponCode"
+            placeholder="Enter coupon"
+          />
+          <button type="button" class="btn btn-small" (click)="applyCoupon()">
+            Apply
+          </button>
+        </div>
+      </div>
+
+      <p
+        class="discount-message"
+        [class.valid]="couponValid"
+        [class.invalid]="!couponValid && couponMessage"
+      >
+        {{ couponMessage }}
+      </p>
+
+      <div class="modal-total">
+        <span>Final Total: </span>
+        <span>{{ formatPrice(finalTotal) }}</span>
+      </div>
+
+      <div class="modal-buttons">
+        <button type="button" class="btn btn-cancel" (click)="onClose()">
+          Cancel
+        </button>
+        <button type="submit" class="btn btn-confirm">Place Order</button>
+      </div>
+    </form>
+  </div>
+</div>

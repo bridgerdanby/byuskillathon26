@@ -1,0 +1,12 @@
+<div class="cart-item">
+  <span class="cart-item-emoji">{{ item.emoji }}</span>
+  <div class="cart-item-details">
+    <p class="cart-item-name">{{ item.name }}</p>
+    <p class="cart-item-price">
+      {{ formatPrice(item.price) }} × {{ item.quantity }}
+    </p>
+  </div>
+  <button class="cart-item-remove" (click)="onRemove()" title="Remove item">
+    &times;
+  </button>
+</div>

@@ -1,0 +1,12 @@
+<header class="header">
+  <div class="header-brand">
+    <h1>🛒 BuggyMart</h1>
+    <p class="tagline">Your favorite buggy shopping experience!</p>
+  </div>
+
+  <div class="cart-icon" (click)="openCart()">
+    <span class="cart-emoji">🛒</span>
+    <!-- BUG #1: Cart count has z-index issue in CSS -->
+    <span class="cart-count">{{ cartItemCount }}</span>
+  </div>
+</header>

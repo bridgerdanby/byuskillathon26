@@ -1,0 +1,39 @@
+.products-section {
+  margin-bottom: 30px;
+}
+
+.products-section h2 {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* BUG #3 (Inspector): Flexbox bug - items don't wrap properly */
+.products-grid {
+  display: flex;
+  gap: 20px;
+  flex-wrap: nowrap; /* BUG: Should be 'wrap' for responsive layout */
+  overflow-x: auto; /* This makes it scroll instead of wrap */
+  padding-bottom: 10px;
+}
+
+.loading {
+  text-align: center;
+  padding: 40px;
+  color: #888;
+  font-size: 1.1rem;
+}
+
+.error-message {
+  color: #ff4757;
+  text-align: center;
+  padding: 20px;
+  background: #ffe6e8;
+  border-radius: 8px;
+}
+
+.no-products {
+  text-align: center;
+  padding: 40px;
+  color: #888;
+  width: 100%;
+}
