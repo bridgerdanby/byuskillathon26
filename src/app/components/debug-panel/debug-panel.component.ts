@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ProductService } from '../../services/product.service';
 
 /**
- * Debug Panel Component - Demonstrates console errors, network issues, and async bugs
+ * Debug Panel Component - Demonstrates Chrome DevTools debugger features
  * Contains intentional bugs for DevTools demonstration
  */
 @Component({
@@ -15,69 +15,57 @@ import { ProductService } from '../../services/product.service';
 })
 export class DebugPanelComponent {
   debugOutput = '';
+  private userCache: Map<number, any> = new Map();
+  private dataReady = false;
 
   constructor(private productService: ProductService) {}
 
-  /**
-   * BUG #12 (Debugger/Console): Accessing undefined nested property
-   * Triggers a TypeError that students can find in the Console
-   */
-  triggerConsoleError(): void {
-    this.debugOutput = 'Check the Console tab for errors...';
+  triggerExceptionError(): void {
+    this.debugOutput = 'Processing user data...';
 
-    console.log('About to access undefined property...');
-
-    const obj: any = { name: 'test' };
-    // BUG: Accessing undefined nested property causes crash
-    console.log('Nested value:', obj.details.nested.value);
+    const userData: any = this.fetchUserData();
+    const userName = userData.profile.settings.displayName;
+    this.debugOutput = `Welcome, ${userName}!`;
   }
 
-  /**
-   * BUG #10 & #11 (Network): Fetches from invalid endpoint with no error handling
-   * Shows how to identify failed requests in Network panel
-   */
-  fetchExternalData(): void {
-    this.debugOutput = 'Fetching data... (check Network tab)';
+  private fetchUserData(): any {
+    return {
+      id: 123,
+      email: 'user@example.com'
+    };
+  }
 
-    // BUG: Wrong endpoint and missing error handling
-    this.productService.fetchExternalData().subscribe({
-      next: (data) => {
-        this.debugOutput = 'Data received: ' + JSON.stringify(data, null, 2);
+  triggerRaceCondition(): void {
+    this.debugOutput = 'Loading data...';
+    this.dataReady = false;
+
+    this.loadDataAsync();
+
+    if (this.dataReady) {
+      this.debugOutput = 'Data loaded: ' + this.userCache.get(1)?.name;
+    } else {
+      this.debugOutput = 'Error: Data not ready yet!';
+    }
+  }
+
+  private loadDataAsync(): void {
+    setTimeout(() => {
+      this.userCache.set(1, { name: 'John Doe', role: 'Admin' });
+      this.dataReady = true;
+    }, 100);
+  }
+
+  triggerRaceConditionFixed(): void {
+    this.debugOutput = 'Loading data (fixed)...';
+    this.dataReady = false;
+
+    setTimeout(() => {
+      this.userCache.set(1, { name: 'John Doe', role: 'Admin' });
+      this.dataReady = true;
+
+      if (this.dataReady) {
+        this.debugOutput = 'Data loaded: ' + this.userCache.get(1)?.name;
       }
-      // BUG: Missing error handler!
-    });
-  }
-
-  /**
-   * BUG #13 (Debugger): Async timing issue - displays "pending" immediately
-   * Demonstrates misunderstanding of async JavaScript
-   */
-  slowOperation(): void {
-    this.debugOutput = 'Starting slow operation...';
-
-    let result = 'pending';
-
-    // Simulate async operation
-    setTimeout(() => {
-      result = 'completed';
-      console.log('Operation finished, result:', result);
-    }, 2000);
-
-    // BUG: This runs immediately, before setTimeout callback
-    this.debugOutput = `Operation result: ${result}`;
-    console.log('Displayed result:', result); // Will show "pending"
-  }
-
-  /**
-   * Helper to demonstrate proper async handling (for teaching)
-   */
-  slowOperationFixed(): void {
-    this.debugOutput = 'Starting slow operation (fixed)...';
-
-    setTimeout(() => {
-      const result = 'completed';
-      this.debugOutput = `Operation result: ${result}`;
-      console.log('Operation finished, result:', result);
-    }, 2000);
+    }, 100);
   }
 }

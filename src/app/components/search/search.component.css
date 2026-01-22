@@ -35,7 +35,6 @@
   transform: translateY(-2px);
 }
 
-/* BUG #2 (Inspector): Higher specificity rule overrides button color */
 .search-section button.btn.search-btn {
-  background-color: #cccccc; /* BUG: Wrong color due to specificity */
+  background-color: #cccccc;
 }

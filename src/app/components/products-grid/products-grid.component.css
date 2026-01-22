@@ -7,12 +7,11 @@
   color: #333;
 }
 
-/* BUG #3 (Inspector): Flexbox bug - items don't wrap properly */
 .products-grid {
   display: flex;
   gap: 20px;
-  flex-wrap: nowrap; /* BUG: Should be 'wrap' for responsive layout */
-  overflow-x: auto; /* This makes it scroll instead of wrap */
+  flex-wrap: nowrap;
+  overflow-x: auto;
   padding-bottom: 10px;
 }
 

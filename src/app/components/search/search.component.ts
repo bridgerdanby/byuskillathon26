@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 
 /**
  * Search Component - Product search functionality
- * Contains CSS bug reference (button color specificity issue)
  */
 @Component({
   selector: 'app-search',

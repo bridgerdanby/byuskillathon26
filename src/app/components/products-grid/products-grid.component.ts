@@ -5,7 +5,6 @@ import { ProductCardComponent } from '../product-card/product-card.component';
 
 /**
  * Products Grid Component - Displays product cards in a grid
- * Contains CSS bug (flexbox nowrap issue)
  */
 @Component({
   selector: 'app-products-grid',

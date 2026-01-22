@@ -5,7 +5,6 @@ import { ToastService, Toast } from '../../services/toast.service';
 
 /**
  * Success Toast Component - Notification popup
- * Contains CSS bug (opacity issue)
  */
 @Component({
   selector: 'app-success-toast',

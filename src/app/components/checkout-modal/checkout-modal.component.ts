@@ -7,7 +7,6 @@ import { CheckoutFormData } from '../../models';
 
 /**
  * Checkout Modal Component - Checkout form with coupon support
- * Contains CSS bug (z-index lower than cart sidebar)
  */
 @Component({
   selector: 'app-checkout-modal',

@@ -32,20 +32,20 @@
   transform: scale(1.1);
 }
 
-/* BUG #1 (Inspector): Cart count has negative z-index - appears behind header */
 .cart-count {
   position: absolute;
-  top: -2px;
-  right: -2px;
+  top: 2px;
+  right: 2px;
   background: #ff4757;
   color: white;
   border-radius: 50%;
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   font-weight: bold;
-  z-index: -1; /* BUG: Should be positive to appear above */
+  box-shadow: 0 2px 8px rgba(255, 71, 87, 0.5);
+  z-index: -1;
 }

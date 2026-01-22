@@ -5,7 +5,6 @@ import { CartService } from '../../services/cart.service';
 
 /**
  * Header Component - App header with cart icon
- * Contains CSS bug reference (z-index issue on cart count)
  */
 @Component({
   selector: 'app-header',

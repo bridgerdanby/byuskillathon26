@@ -44,10 +44,6 @@ export class ProductService {
     );
   }
 
-  /**
-   * BUG #6 (Debugger): Off-by-one error in loop
-   * This method skips the first product!
-   */
   private getFilteredProductList(): Product[] {
     const sourceProducts = this.currentFilter === 'all'
       ? this.products
@@ -55,7 +51,6 @@ export class ProductService {
 
     const result: Product[] = [];
 
-    // BUG: Loop starts at 1 instead of 0, skipping first product
     for (let i = 1; i <= sourceProducts.length; i++) {
       const product = sourceProducts[i];
       if (product) {
@@ -76,8 +71,7 @@ export class ProductService {
   }
 
   /**
-   * BUG #7 (Debugger): Search uses == instead of includes()
-   * Only finds exact matches, not partial matches
+   * Search products by name
    */
   searchProducts(query: string): Observable<Product[]> {
     const searchTerm = query.toLowerCase().trim();
@@ -86,9 +80,8 @@ export class ProductService {
       return this.getProducts();
     }
 
-    // BUG: Uses == for comparison instead of includes()
     const results = this.products.filter(product => {
-      return product.name.toLowerCase() == searchTerm;
+      return product.name.toLowerCase().includes(searchTerm);
     });
 
     return of(results).pipe(delay(300));
@@ -102,12 +95,15 @@ export class ProductService {
   }
 
   /**
-   * BUG #10 & #11 (Network): Fetches from invalid endpoint with no error handling
+   * Fetch external data (demo endpoint)
    */
   fetchExternalData(): Observable<any> {
-    // BUG: Wrong endpoint URL
-    return this.http.get('https://jsonplaceholder.typicode.com/invalid-endpoint/999');
-    // BUG: Missing error handling - no catchError!
+    return this.http.get('https://jsonplaceholder.typicode.com/posts/1').pipe(
+      catchError(error => {
+        console.error('Failed to fetch data:', error);
+        return of(null);
+      })
+    );
   }
 
   /**

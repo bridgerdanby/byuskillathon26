@@ -81,21 +81,15 @@ export class CartService {
     }
   }
 
-  /**
-   * BUG #8 (Debugger): String concatenation instead of number addition
-   * Total calculation is broken due to wrong initial type
-   */
   calculateTotal(): number {
     const items = this.cartItems$.getValue();
 
-    // BUG: Initializing as string instead of number causes concatenation
     let total: any = '';
 
     for (const item of items) {
       total += item.price * item.quantity;
     }
 
-    // This returns NaN or incorrect value due to string concatenation
     return parseFloat(total) || 0;
   }
 

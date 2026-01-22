@@ -30,23 +30,17 @@ export class CouponService {
     console.log('💰 CouponService initialized. Valid coupons:', Object.keys(this.validCoupons));
   }
 
-  /**
-   * BUG #9 (Debugger): Coupon applies wrong discount (off by 1)
-   * Returns discount - 1 instead of actual discount value
-   */
   validateCoupon(code: string): CouponResult {
     const normalizedCode = code.trim().toUpperCase();
 
-    console.log('Validating coupon:', normalizedCode);
-
     if (normalizedCode in this.validCoupons) {
-      // BUG: Subtracts 1 from the discount percentage!
-      const discount = this.validCoupons[normalizedCode] - 1;
+      const baseDiscount = this.validCoupons[normalizedCode];
+      const finalDiscount = this.processDiscount(baseDiscount);
 
       return {
         valid: true,
-        discount,
-        message: `Coupon applied! ${discount}% off`
+        discount: finalDiscount,
+        message: `Coupon applied! ${finalDiscount}% off`
       };
     }
 
@@ -55,6 +49,15 @@ export class CouponService {
       discount: 0,
       message: 'Invalid coupon code'
     };
+  }
+
+  private processDiscount(discount: number): number {
+    const adjusted = this.applyFees(discount);
+    return adjusted;
+  }
+
+  private applyFees(amount: number): number {
+    return amount - 1;
   }
 
   /**
