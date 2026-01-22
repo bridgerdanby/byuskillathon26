@@ -35,11 +35,14 @@ export class DebugPanelComponent {
     };
   }
 
-  triggerRaceCondition(): void {
+  async triggerRaceCondition(): Promise<void> {
     this.debugOutput = 'Loading data...';
     this.dataReady = false;
 
     this.loadDataAsync();
+
+    await this.validateSession();
+    await this.checkPermissions();
 
     if (this.dataReady) {
       this.debugOutput = 'Data loaded: ' + this.userCache.get(1)?.name;
@@ -49,10 +52,30 @@ export class DebugPanelComponent {
   }
 
   private loadDataAsync(): void {
-    setTimeout(() => {
-      this.userCache.set(1, { name: 'John Doe', role: 'Admin' });
+    this.fetchUserProfile(1);
+  }
+
+  private fetchUserProfile(userId: number): void {
+    this.simulateNetworkRequest(() => {
+      this.userCache.set(userId, { name: 'John Doe', role: 'Admin' });
       this.dataReady = true;
-    }, 100);
+    });
+  }
+
+  private simulateNetworkRequest(callback: () => void): void {
+    setTimeout(callback, 100);
+  }
+
+  private async validateSession(): Promise<void> {
+    await this.delay(10);
+  }
+
+  private async checkPermissions(): Promise<void> {
+    await this.delay(10);
+  }
+
+  private delay(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   triggerRaceConditionFixed(): void {

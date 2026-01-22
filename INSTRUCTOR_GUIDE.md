@@ -160,33 +160,41 @@ for (let i = 0; i < sourceProducts.length; i++) {
 
 ---
 
-### Bug #6: Cart Total Shows Wrong Value (Watch Expressions)
+### Bug #6: Data Fetch Race Condition (Logpoints)
 
-**Service:** `cart.service.ts` - `calculateTotal()` method
-**Symptom:** Cart total displays incorrectly (shows first price only, or NaN).
-**Debugger Feature:** **Watch Expressions**
+**Component:** `debug-panel.component.ts` - `triggerRaceCondition()` method
+**Symptom:** Clicking "Fetch User Data" always shows "Error: Data not ready yet!"
+**Debugger Feature:** **Logpoints**
 
-**Why Watch Expressions?**
-You need to monitor the `typeof total` as it changes through iterations. Watch expressions let you track multiple values simultaneously without modifying code.
+**Why Logpoints?**
+This is a **race condition**. The data load takes 100ms, but the code only waits ~20ms before checking. If you set a normal breakpoint and step through slowly, you give the async operation time to complete between await statements - the bug disappears! Logpoints let you observe without affecting timing.
 
 **How to Find:**
 
-1. Add 2-3 items to cart
-2. Open Sources panel - find `cart.service.ts`
-3. Set a breakpoint inside the `for` loop in `calculateTotal()`
-4. In the Watch panel, add these expressions:
-   - `typeof total`
-   - `total`
-   - `item.price * item.quantity`
-5. Step through the loop and watch the values
+1. **First, try a regular breakpoint** (to show it masks the bug):
+   - Set a breakpoint on the `await this.validateSession()` line
+   - Click "Fetch User Data"
+   - Wait a couple seconds, then step through each await slowly
+   - The data loads while you're stepping - it works! (Bug hidden)
 
-**Teaching Point:** `total` starts as an empty string `""`. When you do `"" + 79.99`, JavaScript concatenates instead of adding! Watch `typeof total` show "string" instead of "number".
+2. **Now use Logpoints:**
+   - Remove all breakpoints
+   - Right-click the `if (this.dataReady)` line - select "Add logpoint"
+   - Enter: `checking dataReady: ${this.dataReady}`
+   - Add another logpoint inside `simulateNetworkRequest`'s callback: `data load complete`
+   - Click "Fetch User Data"
+   - Check Console - you'll see "checking dataReady: false" happens BEFORE "data load complete"
+
+**Teaching Point:** Race conditions are timing-sensitive. Stepping through await statements yields to the event loop, giving async operations time to complete. Logpoints observe without interfering.
 
 **How to Fix:**
 
 ```typescript
-// Change initialization from string to number
-let total: number = 0;
+// Await the data load instead of fire-and-forget
+async triggerRaceCondition(): Promise<void> {
+  await this.loadDataAsync(); // Wait for data to actually load
+  // Now check is safe
+}
 ```
 
 ---
@@ -252,41 +260,33 @@ const userName = userData?.profile?.settings?.displayName ?? 'Guest';
 
 ---
 
-### Bug #9: Data Fetch Race Condition (Logpoints)
+### Bug #9: Cart Total Shows Wrong Value (Watch Expressions)
 
-**Component:** `debug-panel.component.ts` - `triggerRaceCondition()` method
-**Symptom:** Clicking "Fetch User Data" always shows "Error: Data not ready yet!"
-**Debugger Feature:** **Logpoints**
+**Service:** `cart.service.ts` - `calculateTotal()` method
+**Symptom:** Cart total displays incorrectly (shows first price only, or NaN).
+**Debugger Feature:** **Watch Expressions**
 
-**Why Logpoints?**
-This is a **race condition**. If you set a normal breakpoint and pause, you give the async operation time to complete - the bug disappears! Logpoints let you observe without affecting timing.
+**Why Watch Expressions?**
+You need to monitor the `typeof total` as it changes through iterations. Watch expressions let you track multiple values simultaneously without modifying code.
 
 **How to Find:**
 
-1. **First, try a regular breakpoint** (to show it masks the bug):
-   - Set breakpoint on the `if (this.dataReady)` line
-   - Click "Fetch User Data"
-   - While paused, the async operation completes
-   - Continue - it works! (Bug hidden)
+1. Add 2-3 items to cart
+2. Open Sources panel - find `cart.service.ts`
+3. Set a breakpoint inside the `for` loop in `calculateTotal()`
+4. In the Watch panel, add these expressions:
+   - `typeof total`
+   - `total`
+   - `item.price * item.quantity`
+5. Step through the loop and watch the values
 
-2. **Now use Logpoints:**
-   - Remove the breakpoint
-   - Right-click the line number - select "Add logpoint"
-   - Enter: `dataReady = ${this.dataReady}`
-   - Add another logpoint in `loadDataAsync()` after the setTimeout callback: `async complete, dataReady = ${this.dataReady}`
-   - Click "Fetch User Data"
-   - Check Console - you'll see `dataReady = false` happens BEFORE the async completes
-
-**Teaching Point:** Race conditions are timing-sensitive. Regular breakpoints change timing. Logpoints observe without interfering.
+**Teaching Point:** `total` starts as an empty string `""`. When you do `"" + 79.99`, JavaScript concatenates instead of adding! Watch `typeof total` show "string" instead of "number".
 
 **How to Fix:**
 
 ```typescript
-// Move the check inside the async callback (see triggerRaceConditionFixed)
-triggerRaceCondition(): void {
-  this.loadDataAsync();
-  // Check should happen AFTER data loads, not immediately
-}
+// Change initialization from string to number
+let total: number = 0;
 ```
 
 ---
@@ -300,10 +300,10 @@ triggerRaceCondition(): void {
 | 3 | Flexbox nowrap | Elements - Flexbox inspector | products-grid.component.css | Easy |
 | 4 | Toast opacity (Optional) | Elements - Computed Styles | success-toast.component.css | Medium |
 | 5 | Loop off-by-one | **Conditional Breakpoints** | product.service.ts | Medium |
-| 6 | String concat total | **Watch Expressions** | cart.service.ts | Hard |
+| 6 | Race condition | **Logpoints** | debug-panel.component.ts | Hard |
 | 7 | Coupon calculation | **Call Stack Navigation** | coupon.service.ts | Medium |
 | 8 | Undefined property | **Exception Breakpoints** | debug-panel.component.ts | Easy |
-| 9 | Race condition | **Logpoints** | debug-panel.component.ts | Hard |
+| 9 | String concat total | **Watch Expressions** | cart.service.ts | Hard |
 
 ---
 
@@ -341,9 +341,9 @@ window.buggyMartCoupons
 2. **Elements Panel (10 min)**: Fix bugs #1, #2, #3 (most visual)
 3. **Debugger Panel (15 min)**:
    - Bug #5: Conditional Breakpoints
-   - Bug #6: Watch Expressions
+   - Bug #6: Logpoints (race condition - most impressive)
    - Bug #8: Exception Breakpoints (quick demo)
-   - Bug #9: Logpoints (race condition - most impressive)
+   - Bug #9: Watch Expressions
 4. **Q&A / Free exploration (3 min)**
 
 ---
