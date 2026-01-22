@@ -206,27 +206,27 @@ async triggerRaceCondition(): Promise<void> {
 **Debugger Feature:** **Call Stack Navigation**
 
 **Why Call Stack?**
-The discount passes through multiple functions. The call stack lets you trace the value through each function call and find exactly where it gets corrupted.
+The discount value is wrong, but you don't know where in the chain it got corrupted. Set a breakpoint at the end of the chain and use the call stack to inspect variables at each level to find where the value changed.
 
 **How to Find:**
 
 1. Add items to cart, open checkout modal
-2. Set a breakpoint at the start of `validateCoupon()`
+2. Set a breakpoint inside `finalizeDiscount()` on the `return discount;` line
 3. Enter coupon "SAVE10" and click Apply
-4. Use the **Call Stack** panel to trace the flow:
-   - `validateCoupon()` - baseDiscount = 10 (correct)
-   - `processDiscount()` - passes through
-   - `applyFees()` - **returns amount - 1!**
-5. Click each frame in the call stack to inspect variables at that level
+4. When it hits, hover over `discount` - it's 9, not 10!
+5. Use the **Call Stack** panel to trace back:
+   - Click `applyToCart` frame → inspect `discount` parameter: still 9
+   - Click `processCouponDiscount` frame → inspect `discount` parameter: **10!**
+   - Found it! Look at the code: `const adjusted = discount - 1` - there's the bug!
 
-**Teaching Point:** The bug is buried in a nested helper function. Call stack navigation reveals the exact function corrupting the value.
+**Teaching Point:** Instead of stepping through every line, set a breakpoint where you see the wrong value, then use call stack to click through each caller and inspect their variables to find where the value changed.
 
 **How to Fix:**
 
 ```typescript
-// In applyFees(), remove the subtraction
-private applyFees(amount: number): number {
-  return amount; // Was: return amount - 1;
+// In processCouponDiscount(), remove the subtraction
+private processCouponDiscount(discount: number, code: string): number {
+  return this.applyToCart(discount, code); // Was: discount - 1
 }
 ```
 

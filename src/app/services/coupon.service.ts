@@ -35,7 +35,7 @@ export class CouponService {
 
     if (normalizedCode in this.validCoupons) {
       const baseDiscount = this.validCoupons[normalizedCode];
-      const finalDiscount = this.processDiscount(baseDiscount);
+      const finalDiscount = this.processCouponDiscount(baseDiscount, normalizedCode);
 
       return {
         valid: true,
@@ -51,13 +51,19 @@ export class CouponService {
     };
   }
 
-  private processDiscount(discount: number): number {
-    const adjusted = this.applyFees(discount);
-    return adjusted;
+  private processCouponDiscount(discount: number, code: string): number {
+    const adjusted = discount - 1;
+    return this.applyToCart(adjusted, code);
   }
 
-  private applyFees(amount: number): number {
-    return amount - 1;
+  private applyToCart(discount: number, code: string): number {
+    return this.finalizeDiscount(discount, code);
+  }
+
+  private finalizeDiscount(discount: number, code: string): number {
+    // Breakpoint here: discount is already 9, not 10!
+    // Use call stack to trace back and find where it became 9
+    return discount;
   }
 
   /**
