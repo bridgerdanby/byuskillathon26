@@ -4,7 +4,7 @@
 
 This Angular application contains **9 intentional bugs** designed to teach students how to use Chrome DevTools effectively. The bugs are organized into two sections:
 
-- **Inspector (Elements Panel):** 4 CSS bugs (#1-3 required, #4 optional)
+- **Inspector (Elements Panel):** 4 CSS bugs (#1-4)
 - **Debugger (Sources Panel):** 5 JavaScript bugs (#5-9), each showcasing a different debugger feature
 
 **Estimated Time:** 30 minutes
@@ -102,7 +102,7 @@ Then open Chrome DevTools with `F12` or `Cmd+Option+I` (Mac) / `Ctrl+Shift+I` (W
 
 ---
 
-### Bug #4 (Optional): Success Toast is Invisible
+### Bug #4: Success Toast is Invisible
 
 **Component:** `success-toast.component.css`
 **Symptom:** When adding items to cart, the toast notification doesn't appear.
@@ -239,17 +239,17 @@ private processCouponDiscount(discount: number, code: string): number {
 **Debugger Feature:** **Exception Breakpoints (Pause on Exceptions)**
 
 **Why Exception Breakpoints?**
-Instead of guessing where an error occurs or adding try/catch everywhere, enable "Pause on uncaught exceptions" to stop exactly at the crash point.
+Instead of guessing where an error occurs or adding try/catch everywhere, enable "Pause on caught exceptions" to stop exactly at the crash point.
 
 **How to Find:**
 
 1. Open Sources panel
-2. In the Breakpoints section, check **"Pause on uncaught exceptions"**
+2. In the Breakpoints section, check **"Pause on caught exceptions"** (Angular's zone.js catches all exceptions)
 3. Click the "Load User Profile" button in the Debug Panel
 4. DevTools pauses exactly on the line: `userData.profile.settings.displayName`
 5. Hover over `userData` to see it has no `profile` property
 
-**Teaching Point:** The debugger shows you the exact line AND lets you inspect the object state at crash time.
+**Teaching Point:** The debugger shows you the exact line AND lets you inspect the object state at crash time. Note: In Angular apps, use "caught exceptions" since the framework's error handler catches everything.
 
 **How to Fix:**
 
@@ -298,7 +298,7 @@ let total: number = 0;
 | 1 | Cart count z-index | Elements - Computed Styles | header.component.css | Easy |
 | 2 | Button specificity | Elements - Styles (specificity) | search.component.css | Medium |
 | 3 | Flexbox nowrap | Elements - Flexbox inspector | products-grid.component.css | Easy |
-| 4 | Toast opacity (Optional) | Elements - Computed Styles | success-toast.component.css | Medium |
+| 4 | Toast opacity | Elements - Computed Styles | success-toast.component.css | Medium |
 | 5 | Loop off-by-one | **Conditional Breakpoints** | product.service.ts | Medium |
 | 6 | Race condition | **Logpoints** | debug-panel.component.ts | Hard |
 | 7 | Coupon calculation | **Call Stack Navigation** | coupon.service.ts | Medium |

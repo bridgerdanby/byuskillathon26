@@ -77,18 +77,4 @@ export class DebugPanelComponent {
   private delay(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
-
-  triggerRaceConditionFixed(): void {
-    this.debugOutput = 'Loading data (fixed)...';
-    this.dataReady = false;
-
-    setTimeout(() => {
-      this.userCache.set(1, { name: 'John Doe', role: 'Admin' });
-      this.dataReady = true;
-
-      if (this.dataReady) {
-        this.debugOutput = 'Data loaded: ' + this.userCache.get(1)?.name;
-      }
-    }, 100);
-  }
 }

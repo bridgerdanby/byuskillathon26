@@ -61,8 +61,6 @@ export class CouponService {
   }
 
   private finalizeDiscount(discount: number, code: string): number {
-    // Breakpoint here: discount is already 9, not 10!
-    // Use call stack to trace back and find where it became 9
     return discount;
   }
 
